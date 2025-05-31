@@ -1,44 +1,70 @@
 # Python Video Renderer Based on Static Images and Audio Files
 
-This project provides a simple Python script that generates a video from a static image and an audio file. It leverages the power of FFmpeg to render a 1080p, 24fps video with synchronized image and audio.
+This project provides Python scripts to generate videos by combining static images with audio tracks. It uses FFmpeg to create high-quality 1080p videos, ideal for visual storytelling, podcasts, or social media content.
 
-## Script: `main.py`
+## Scripts Overview
 
-This script takes:
+### `generate_single_video.py`
+
+Generates a single video from:
 
 * One **image** (JPG or PNG)
-* One **music file** (MP3)
-* Produces a video file (`output.mp4`) using FFmpeg
+* One **audio file** (MP3)
+
+The resulting video (`output.mp4`) displays the static image while playing the audio, encoded using FFmpeg.
+
+### `generate_videos_by_date.py`
+
+Generates multiple videos across a date range. For each date (in `YYYY-MM-DD` format), it:
+
+* Looks for a matching image in `source/imgs/`
+* Looks for a matching audio file in `source/audio/`
+* Generates a video if both exist
+* Skips and logs an error if either is missing
+
+Example:
+
+```
+source/
+├── imgs/
+│   ├── 2025-06-15.jpg
+│   └── 2025-06-16.jpg
+├── audio/
+│   ├── 2025-06-15.mp3
+│   └── 2025-06-16.mp3
+```
+
+Each output video will be saved in the `output/` directory as `YYYY-MM-DD.mp4`.
 
 ## Features
 
-* Outputs a **1920x1080 resolution** video
-* Static image is displayed for the full duration of the audio
-* Audio and video are synced perfectly
-* Uses **FFmpeg** for performance and quality
-* Runs entirely via standard Python libraries (no pip dependencies)
+* Outputs **1920x1080 resolution** videos at **24fps**
+* Uses `-tune stillimage` for efficient static encoding
+* Ensures clean synchronization between image and audio
+* Handles multiple days with minimal setup
+* Logs missing media files for audit and debugging
 
 ## Getting Started
 
 ### Prerequisites
 
 * Python 3.7 or later
-* FFmpeg installed and available in your system PATH
+* FFmpeg installed and accessible in your system PATH
 
-Install FFmpeg using your system's package manager:
+Install FFmpeg:
 
-* On Ubuntu:
+* Ubuntu:
 
   ```bash
   sudo apt install ffmpeg
   ```
-* On macOS:
+* macOS:
 
   ```bash
   brew install ffmpeg
   ```
-* On Windows:
-  Download from [FFmpeg's official website](https://ffmpeg.org/download.html) and add it to your PATH.
+* Windows:
+  Download from [FFmpeg's official site](https://ffmpeg.org/download.html) and add it to PATH.
 
 ### Installation
 
@@ -50,7 +76,8 @@ Install FFmpeg using your system's package manager:
    ```
 
 2. **Prepare the Source Files**
-   Inside the project directory, create a `source/` folder and place the following:
+
+   For `generate_single_video.py`:
 
    ```
    source/
@@ -58,36 +85,60 @@ Install FFmpeg using your system's package manager:
    └── music.mp3
    ```
 
-3. **Run the Script**
+   For `generate_videos_by_date.py`:
+
+   ```
+   source/
+   ├── imgs/
+   │   ├── YYYY-MM-DD.jpg
+   └── audio/
+       ├── YYYY-MM-DD.mp3
+   ```
+
+3. **Run the Scripts**
+
+   For a single video:
 
    ```bash
-   python main.py
+   python generate_single_video.py
+   ```
+
+   For batch generation:
+
+   ```bash
+   python generate_videos_by_date.py
    ```
 
 4. **Output**
-   The resulting video will be saved as:
 
-   ```
-   output.mp4
-   ```
+   The generated videos will appear in the `output/` directory.
 
 ## File Structure
 
 ```
 PythonVideoFromImageAudio/
-├── main.py
+├── generate_single_video.py
+├── generate_videos_by_date.py
 ├── source/
 │   ├── image.jpg
-│   └── music.mp3
+│   ├── music.mp3
+│   ├── imgs/
+│   │   ├── 2025-06-15.jpg
+│   │   └── ...
+│   └── audio/
+│       ├── 2025-06-15.mp3
+│       └── ...
 └── output/
-    └── output.mp4
+    ├── output.mp4
+    ├── 2025-06-15.mp4
+    └── ...
 ```
 
 ## Dependencies
 
-None (aside from FFmpeg being available on your system).
+No Python packages required (FFmpeg must be installed and in PATH).
 
-If you prefer a Pythonic wrapper, you can optionally install `ffmpeg-python`:
+Optionally, you can install `ffmpeg-python` if you prefer a Python wrapper:
 
 ```bash
 pip install ffmpeg-python
@@ -95,7 +146,7 @@ pip install ffmpeg-python
 
 ## License and Disclaimer
 
-This project is open-source under the MIT License. You are free to use and modify it at your discretion. The author is not responsible for how this code is used.
+This project is open-source under the MIT License. Use and modify it freely. The author assumes no responsibility for misuse or output content.
 
 ---
 
